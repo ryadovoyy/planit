@@ -14,7 +14,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   @Public()
-  @ApiOperation({ summary: 'Login user' })
+  @ApiOperation({ summary: 'Login a user' })
   @ApiOkResponse({ type: AccessTokenDto })
   async login(@Body() loginDto: LoginDto): Promise<AccessTokenDto> {
     return this.authService.login(loginDto);
