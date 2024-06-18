@@ -10,7 +10,8 @@ import { Role } from '@prisma/client';
 
 import { Roles } from 'src/auth/roles.decorator';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { RoleEntity } from './entities/role.entity';
+import { RoleDto } from './dto/role.dto';
+import { RoleEnum } from './role.enum';
 import { RolesService } from './roles.service';
 
 @Controller('roles')
@@ -20,17 +21,17 @@ export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Post()
-  @Roles('ADMIN')
-  @ApiOperation({ summary: 'Create new role' })
-  @ApiCreatedResponse({ type: RoleEntity })
+  @Roles(RoleEnum.Admin)
+  @ApiOperation({ summary: 'Create a new role' })
+  @ApiCreatedResponse({ type: RoleDto })
   async create(@Body() createRoleDto: CreateRoleDto): Promise<Role> {
     return this.rolesService.create(createRoleDto);
   }
 
   @Get()
-  @Roles('ADMIN')
+  @Roles(RoleEnum.Admin)
   @ApiOperation({ summary: 'Get all roles' })
-  @ApiOkResponse({ type: RoleEntity, isArray: true })
+  @ApiOkResponse({ type: RoleDto, isArray: true })
   async findAll(): Promise<Role[]> {
     return this.rolesService.findAll();
   }

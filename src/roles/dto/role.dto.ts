@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
 
-export class RoleEntity implements Role {
+export class RoleDto {
   @ApiProperty()
   id: number;
 
