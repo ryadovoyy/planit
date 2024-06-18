@@ -1,11 +1,15 @@
 import { Prisma } from '@prisma/client';
 
-import { UserEntity } from './entities/user.entity';
+import { UserWithRolesDto } from './dto/user-with-roles.dto';
+
+export const userWithRolesInclude: Prisma.UserInclude = {
+  roles: true,
+};
 
 const userWithRoles = Prisma.validator<Prisma.UserDefaultArgs>()({
-  include: { roles: true },
+  include: userWithRolesInclude,
 });
 
 export type UserWithRoles = Prisma.UserGetPayload<typeof userWithRoles>;
 export type UserWithRolesData = UserWithRoles | UserWithRoles[];
-export type UserEntityData = UserEntity | UserEntity[];
+export type UserWithRolesDtoData = UserWithRolesDto | UserWithRolesDto[];

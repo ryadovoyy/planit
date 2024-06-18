@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserWithRoles } from './users.types';
+import { UserWithRoles, userWithRolesInclude } from './users.types';
 
 const HASHING_ROUNDS = 12;
 
@@ -41,20 +41,20 @@ export class UsersService {
           connect: { name: 'USER' },
         },
       },
-      include: { roles: true },
+      include: userWithRolesInclude,
     });
   }
 
   async findAll(): Promise<UserWithRoles[]> {
     return this.prisma.user.findMany({
-      include: { roles: true },
+      include: userWithRolesInclude,
     });
   }
 
   async findOneById(id: number): Promise<UserWithRoles | null> {
     return this.prisma.user.findUnique({
       where: { id },
-      include: { roles: true },
+      include: userWithRolesInclude,
     });
   }
 
@@ -71,7 +71,7 @@ export class UsersService {
   async findOneByEmail(email: string): Promise<UserWithRoles | null> {
     return this.prisma.user.findUnique({
       where: { email },
-      include: { roles: true },
+      include: userWithRolesInclude,
     });
   }
 
@@ -87,7 +87,7 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: updateUserDto,
-      include: { roles: true },
+      include: userWithRolesInclude,
     });
   }
 

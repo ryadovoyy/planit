@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 
-import { RoleEntity } from 'src/roles/entities/role.entity';
+import { RoleDto } from 'src/roles/dto/role.dto';
 import { UserWithRoles } from '../users.types';
 
-export class UserEntity implements UserWithRoles {
+export class UserWithRolesDto {
   @ApiProperty()
   id: number;
 
@@ -23,8 +23,8 @@ export class UserEntity implements UserWithRoles {
   @ApiProperty()
   updatedAt: Date;
 
-  @ApiProperty({ type: RoleEntity, isArray: true })
-  roles: RoleEntity[];
+  @ApiProperty({ type: RoleDto, isArray: true })
+  roles: RoleDto[];
 
   constructor(user: UserWithRoles) {
     Object.assign(this, user);

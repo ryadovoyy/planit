@@ -8,7 +8,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -22,10 +21,11 @@ import {
 
 import { Public } from 'src/auth/public.decorator';
 import { Roles } from 'src/auth/roles.decorator';
+import { CheckOwnershipInParams } from 'src/casl/check-ownership.decorator';
+import { RoleEnum } from 'src/roles/role.enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user.entity';
-import { OwnUserGuard } from './own-user.guard';
+import { UserWithRolesDto } from './dto/user-with-roles.dto';
 import { UserMappingInterceptor } from './user-mapping.interceptor';
 import { UsersService } from './users.service';
 import { UserWithRoles } from './users.types';
@@ -38,35 +38,35 @@ export class UsersController {
 
   @Post()
   @Public()
-  @ApiOperation({ summary: 'Register new user' })
-  @ApiCreatedResponse({ type: UserEntity })
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiCreatedResponse({ type: UserWithRolesDto })
   async create(@Body() createUserDto: CreateUserDto): Promise<UserWithRoles> {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  @Roles('ADMIN')
+  @Roles(RoleEnum.Admin)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all users' })
-  @ApiOkResponse({ type: UserEntity, isArray: true })
+  @ApiOkResponse({ type: UserWithRolesDto, isArray: true })
   async findAll(): Promise<UserWithRoles[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(OwnUserGuard)
+  @CheckOwnershipInParams('User')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Find user by ID' })
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOkResponse({ type: UserWithRolesDto })
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserWithRoles> {
     return this.usersService.findOneByIdOrFail(id);
   }
 
   @Patch(':id')
-  @UseGuards(OwnUserGuard)
+  @CheckOwnershipInParams('User')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Update user' })
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOperation({ summary: 'Update user details' })
+  @ApiOkResponse({ type: UserWithRolesDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -76,9 +76,9 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(204)
-  @UseGuards(OwnUserGuard)
+  @CheckOwnershipInParams('User')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Delete user' })
+  @ApiOperation({ summary: 'Delete a user' })
   @ApiNoContentResponse()
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.usersService.remove(id);

@@ -6,23 +6,23 @@ import {
 } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 
-import { UserEntity } from './entities/user.entity';
-import { UserEntityData, UserWithRolesData } from './users.types';
+import { UserWithRolesDto } from './dto/user-with-roles.dto';
+import { UserWithRolesData, UserWithRolesDtoData } from './users.types';
 
 @Injectable()
 export class UserMappingInterceptor
-  implements NestInterceptor<UserWithRolesData, UserEntityData>
+  implements NestInterceptor<UserWithRolesData, UserWithRolesDtoData>
 {
   intercept(
     _context: ExecutionContext,
     next: CallHandler<UserWithRolesData>,
-  ): Observable<UserEntityData> {
+  ): Observable<UserWithRolesDtoData> {
     return next.handle().pipe(
       map((userData) => {
         if (Array.isArray(userData)) {
-          return userData.map((user) => new UserEntity(user));
+          return userData.map((user) => new UserWithRolesDto(user));
         } else {
-          return new UserEntity(userData);
+          return new UserWithRolesDto(userData);
         }
       }),
     );
