@@ -25,6 +25,8 @@
     "docker:db": "docker compose -f docker-compose.db.yaml up -d"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.1",
+    "@casl/prisma": "^1.4.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/jwt": "^10.2.0",
