@@ -32,6 +32,22 @@ export class CaslAbilityFactory {
           },
         },
       });
+
+      can('manage', 'TaskField', {
+        project: {
+          is: { userId: user.id },
+        },
+      });
+
+      can('manage', 'TaskFieldDropdownOption', {
+        taskField: {
+          is: {
+            project: {
+              is: { userId: user.id },
+            },
+          },
+        },
+      });
     }
 
     return build();

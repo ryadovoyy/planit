@@ -1,11 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
+  ArrayNotEmpty,
+  IsArray,
   IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
   MaxLength,
+  ValidateNested,
 } from 'class-validator';
+
+import { AddCustomFieldValueDto } from './add-custom-field-value.dto';
 
 export class CreateTaskDto {
   @IsString()
@@ -24,4 +30,12 @@ export class CreateTaskDto {
   @IsInt()
   @ApiProperty()
   listId: number;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested()
+  @IsOptional()
+  @Type(() => AddCustomFieldValueDto)
+  @ApiProperty({ type: AddCustomFieldValueDto, isArray: true, required: false })
+  customFieldValues?: AddCustomFieldValueDto[];
 }

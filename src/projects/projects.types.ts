@@ -16,6 +16,11 @@ export const projectWithListsAndTasksInclude =
       include: {
         tasks: {
           orderBy: { position: 'asc' },
+          include: {
+            fieldNumericValues: true,
+            fieldStringValues: true,
+            fieldDropdownValues: true,
+          },
         },
       },
     },

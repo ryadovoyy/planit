@@ -1,6 +1,14 @@
 import { PureAbility } from '@casl/ability';
 import { PrismaQuery, Subjects } from '@casl/prisma';
-import { List, Project, Role, Task, User } from '@prisma/client';
+import {
+  List,
+  Project,
+  Role,
+  Task,
+  TaskField,
+  TaskFieldDropdownOption,
+  User,
+} from '@prisma/client';
 
 type Action = 'manage' | 'create' | 'read' | 'update' | 'delete';
 
@@ -10,6 +18,8 @@ type SubjectList = {
   Project: Project;
   List: List;
   Task: Task;
+  TaskField: TaskField;
+  TaskFieldDropdownOption: TaskFieldDropdownOption;
 };
 
 export type AppSubject = Subjects<SubjectList> | 'all';

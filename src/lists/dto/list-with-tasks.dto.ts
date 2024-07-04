@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
-import { TaskDto } from 'src/tasks/dto/task.dto';
+import { TaskWithCustomFieldsDto } from 'src/tasks/dto/task-with-custom-fields.dto';
 import { ListDto } from './list.dto';
 
 export class ListWithTasksDto extends ListDto {
-  @ApiProperty({ type: TaskDto, isArray: true })
-  tasks: TaskDto[];
+  @Type(() => TaskWithCustomFieldsDto)
+  @ApiProperty({ type: TaskWithCustomFieldsDto, isArray: true })
+  tasks: TaskWithCustomFieldsDto[];
 }

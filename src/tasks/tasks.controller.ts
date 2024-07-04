@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -25,9 +26,12 @@ import {
 } from 'src/casl/check-ownership.decorator';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { MoveTaskDto } from './dto/move-task.dto';
+import { TaskWithCustomFieldsDto } from './dto/task-with-custom-fields.dto';
 import { TaskDto } from './dto/task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskMappingInterceptor } from './task-mapping.interceptor';
 import { TasksService } from './tasks.service';
+import { TaskWithCustomFields } from './tasks.types';
 
 @Controller('tasks')
 @ApiTags('tasks')
@@ -37,20 +41,24 @@ export class TasksController {
 
   @Post()
   @CheckOwnershipInBody('List')
+  @UseInterceptors(TaskMappingInterceptor)
   @ApiOperation({ summary: 'Create a new task in a list' })
-  @ApiCreatedResponse({ type: TaskDto })
-  async create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+  @ApiCreatedResponse({ type: TaskWithCustomFieldsDto })
+  async create(
+    @Body() createTaskDto: CreateTaskDto,
+  ): Promise<TaskWithCustomFields> {
     return this.tasksService.create(createTaskDto);
   }
 
   @Patch(':id')
   @CheckOwnershipInParams('Task')
+  @UseInterceptors(TaskMappingInterceptor)
   @ApiOperation({ summary: 'Update task details' })
-  @ApiOkResponse({ type: TaskDto })
+  @ApiOkResponse({ type: TaskWithCustomFieldsDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTaskDto: UpdateTaskDto,
-  ): Promise<Task> {
+  ): Promise<TaskWithCustomFields> {
     return this.tasksService.update(id, updateTaskDto);
   }
 

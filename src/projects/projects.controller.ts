@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Req,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -27,6 +28,7 @@ import { ProjectTitleDto } from './dto/project-title.dto';
 import { ProjectWithListsAndTasksDto } from './dto/project-with-lists-and-tasks.dto';
 import { ProjectDto } from './dto/project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { ProjectMappingInterceptor } from './project-mapping.interceptor';
 import { ProjectsService } from './projects.service';
 import { ProjectTitle, ProjectWithListsAndTasks } from './projects.types';
 
@@ -37,6 +39,7 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
+  @UseInterceptors(ProjectMappingInterceptor)
   @ApiOperation({ summary: 'Create a new project' })
   @ApiCreatedResponse({ type: ProjectWithListsAndTasksDto })
   async create(
@@ -55,6 +58,7 @@ export class ProjectsController {
 
   @Get(':id')
   @CheckOwnershipInParams('Project')
+  @UseInterceptors(ProjectMappingInterceptor)
   @ApiOperation({ summary: 'Find project by ID' })
   @ApiOkResponse({ type: ProjectWithListsAndTasksDto })
   async findOne(
