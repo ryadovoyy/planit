@@ -20,6 +20,7 @@ import { Task } from '@prisma/client';
 
 import {
   CheckOwnership,
+  CheckOwnershipInBody,
   CheckOwnershipInParams,
 } from 'src/casl/check-ownership.decorator';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -35,7 +36,7 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  @CheckOwnership({ subject: 'List', store: 'body', id: 'listId' })
+  @CheckOwnershipInBody('List')
   @ApiOperation({ summary: 'Create a new task in a list' })
   @ApiCreatedResponse({ type: TaskDto })
   async create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {

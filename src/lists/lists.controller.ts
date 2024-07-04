@@ -19,7 +19,7 @@ import {
 import { List } from '@prisma/client';
 
 import {
-  CheckOwnership,
+  CheckOwnershipInBody,
   CheckOwnershipInParams,
 } from 'src/casl/check-ownership.decorator';
 import { CreateListDto } from './dto/create-list.dto';
@@ -35,7 +35,7 @@ export class ListsController {
   constructor(private readonly listsService: ListsService) {}
 
   @Post()
-  @CheckOwnership({ subject: 'Project', store: 'body', id: 'projectId' })
+  @CheckOwnershipInBody('Project')
   @ApiOperation({ summary: 'Create a new list in a project' })
   @ApiCreatedResponse({ type: ListDto })
   async create(@Body() createListDto: CreateListDto): Promise<List> {
