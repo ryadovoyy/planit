@@ -26,13 +26,14 @@ model Role {
 }
 
 model Project {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   title       String
   description String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime    @default(now())
   userId      Int
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   lists       List[]
+  taskFields  TaskField[]
 }
 
 model List {
@@ -45,11 +46,75 @@ model List {
 }
 
 model Task {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String?
-  createdAt   DateTime @default(now())
-  position    Int
-  listId      Int
-  list        List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  id                  Int                      @id @default(autoincrement())
+  title               String
+  description         String?
+  createdAt           DateTime                 @default(now())
+  position            Int
+  listId              Int
+  list                List                     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  fieldNumericValues  TaskFieldNumericValue[]
+  fieldStringValues   TaskFieldStringValue[]
+  fieldDropdownValues TaskFieldDropdownValue[]
+}
+
+model TaskField {
+  id              Int                       @id @default(autoincrement())
+  title           String
+  type            TaskFieldType
+  projectId       Int
+  project         Project                   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  dropdownOptions TaskFieldDropdownOption[]
+  numericValues   TaskFieldNumericValue[]
+  stringValues    TaskFieldStringValue[]
+  dropdownValues  TaskFieldDropdownValue[]
+
+  @@unique([projectId, title, type])
+}
+
+model TaskFieldDropdownOption {
+  id             Int                      @id @default(autoincrement())
+  value          String
+  taskFieldId    Int
+  taskField      TaskField                @relation(fields: [taskFieldId], references: [id], onDelete: Cascade)
+  dropdownValues TaskFieldDropdownValue[]
+
+  @@unique([taskFieldId, value])
+}
+
+model TaskFieldNumericValue {
+  taskFieldId Int
+  taskId      Int
+  value       Float
+  taskField   TaskField @relation(fields: [taskFieldId], references: [id], onDelete: Cascade)
+  task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@id([taskFieldId, taskId])
+}
+
+model TaskFieldStringValue {
+  taskFieldId Int
+  taskId      Int
+  value       String
+  taskField   TaskField @relation(fields: [taskFieldId], references: [id], onDelete: Cascade)
+  task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@id([taskFieldId, taskId])
+}
+
+model TaskFieldDropdownValue {
+  taskFieldId      Int
+  taskId           Int
+  dropdownOptionId Int
+  taskField        TaskField               @relation(fields: [taskFieldId], references: [id], onDelete: Cascade)
+  task             Task                    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  dropdownOption   TaskFieldDropdownOption @relation(fields: [dropdownOptionId], references: [id], onDelete: Cascade)
+
+  @@id([taskFieldId, taskId])
+}
+
+enum TaskFieldType {
+  NUMERIC
+  STRING
+  DROPDOWN
 }
