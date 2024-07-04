@@ -2,14 +2,13 @@ import { Prisma } from '@prisma/client';
 
 import { UserWithRolesDto } from './dto/user-with-roles.dto';
 
-export const userWithRolesInclude: Prisma.UserInclude = {
+export const userWithRolesInclude = Prisma.validator<Prisma.UserInclude>()({
   roles: true,
-};
-
-const userWithRoles = Prisma.validator<Prisma.UserDefaultArgs>()({
-  include: userWithRolesInclude,
 });
 
-export type UserWithRoles = Prisma.UserGetPayload<typeof userWithRoles>;
+export type UserWithRoles = Prisma.UserGetPayload<{
+  include: typeof userWithRolesInclude;
+}>;
+
 export type UserWithRolesData = UserWithRoles | UserWithRoles[];
 export type UserWithRolesDtoData = UserWithRolesDto | UserWithRolesDto[];

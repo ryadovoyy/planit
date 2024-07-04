@@ -1,39 +1,34 @@
 import { Prisma } from '@prisma/client';
 
-export const projectTitleSelect: Prisma.ProjectSelect = {
+export const projectTitleSelect = Prisma.validator<Prisma.ProjectSelect>()({
   id: true,
   title: true,
-};
+});
 
-export const projectUserIdSelect: Prisma.ProjectSelect = {
+export const projectUserIdSelect = Prisma.validator<Prisma.ProjectSelect>()({
   userId: true,
-};
+});
 
-export const projectWithListsAndTasksInclude: Prisma.ProjectInclude = {
-  lists: {
-    orderBy: { position: 'asc' },
-    include: {
-      tasks: {
-        orderBy: { position: 'asc' },
+export const projectWithListsAndTasksInclude =
+  Prisma.validator<Prisma.ProjectInclude>()({
+    lists: {
+      orderBy: { position: 'asc' },
+      include: {
+        tasks: {
+          orderBy: { position: 'asc' },
+        },
       },
     },
-  },
-};
+  });
 
-const projectTitle = Prisma.validator<Prisma.ProjectDefaultArgs>()({
-  select: projectTitleSelect,
-});
+export type ProjectTitle = Prisma.ProjectGetPayload<{
+  select: typeof projectTitleSelect;
+}>;
 
-const projectUserId = Prisma.validator<Prisma.ProjectDefaultArgs>()({
-  select: projectUserIdSelect,
-});
+export type ProjectUserId = Prisma.ProjectGetPayload<{
+  select: typeof projectUserIdSelect;
+}>;
 
-const projectWithListsAndTasks = Prisma.validator<Prisma.ProjectDefaultArgs>()({
-  include: projectWithListsAndTasksInclude,
-});
-
-export type ProjectTitle = Prisma.ProjectGetPayload<typeof projectTitle>;
-export type ProjectUserId = Prisma.ProjectGetPayload<typeof projectUserId>;
-export type ProjectWithListsAndTasks = Prisma.ProjectGetPayload<
-  typeof projectWithListsAndTasks
->;
+export type ProjectWithListsAndTasks = Prisma.ProjectGetPayload<{
+  include: typeof projectWithListsAndTasksInclude;
+}>;

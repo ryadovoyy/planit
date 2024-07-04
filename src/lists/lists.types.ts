@@ -1,13 +1,11 @@
 import { Prisma } from '@prisma/client';
 
-export const listUserIdSelect: Prisma.ListSelect = {
+export const listUserIdSelect = Prisma.validator<Prisma.ListSelect>()({
   project: {
     select: { userId: true },
   },
-};
-
-const listUserId = Prisma.validator<Prisma.ListDefaultArgs>()({
-  select: listUserIdSelect,
 });
 
-export type ListUserId = Prisma.ListGetPayload<typeof listUserId>;
+export type ListUserId = Prisma.ListGetPayload<{
+  select: typeof listUserIdSelect;
+}>;
